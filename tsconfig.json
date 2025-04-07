@@ -1,0 +1,25 @@
+{
+  // Consider creating a base tsconfig.json in the root if multiple servers exist
+  // "extends": "../../tsconfig.base.json", // Example if using a base config
+  "compilerOptions": {
+    "target": "ES2022", // Target Node 18+ features
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true, // Generate .d.ts files
+    "sourceMap": true, // Generate source maps for debugging
+    "lib": ["ES2022"] // Specify libs for ES2022
+  },
+  "include": [
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
