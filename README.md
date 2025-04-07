@@ -1,16 +1,30 @@
 # ClickHouse Cloud MCP Server
 
-This MCP server provides tools to interact with the ClickHouse Cloud API (v1). It allows managing organizations, services, API keys, and more directly through MCP clients like Claude Desktop.
+This MCP server provides tools to interact with the ClickHouse Cloud API (v1). It allows managing organizations, the rest is TODO.
 
 ## Features
 
-- Exposes ClickHouse Cloud API endpoints as MCP tools.
-- Authenticates using ClickHouse API Key ID and Secret provided via environment variables.
+- Exposes ClickHouse Cloud API endpoint via MCP tools.
+- Authenticates using ClickHouse OpenAPI Key ID and Secret provided via environment variables.
 - Handles JSON request bodies and responses.
 
 ## Prerequisites
 
-You need a ClickHouse Cloud API Key. You can generate one in your ClickHouse Cloud organization settings.
+You need a ClickHouse Cloud API Key.
+
+## Installation
+
+Clone this repository and install the dependencies:
+
+```bash
+npm install
+```
+Build the TypeScript code:
+
+```bash
+npm run build
+```
+This will create a `dist` directory containing the compiled JavaScript file.
 
 ## Configuration
 
@@ -18,6 +32,8 @@ This server requires the following environment variables to be set:
 
 - `CLICKHOUSE_API_KEY_ID`: Your ClickHouse Cloud API Key ID.
 - `CLICKHOUSE_API_SECRET`: Your ClickHouse Cloud API Key Secret.
+- `CLICKHOUSE_API_URL`: The base URL for the ClickHouse Cloud API (default is `https://api.clickhouse.cloud`).
+  Use `http://localhost:2023` for local development.
 
 ## Usage with Claude Desktop
 
@@ -27,19 +43,16 @@ Add the following configuration to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "clickhouse": {
-      "command": "node", // Or npx if published
+      "command": "node",
       "args": [
-        "/path/to/your/mcp-server-clickhouse/dist/index.js" // Adjust path
-        // Or if published:
-        // "-y",
-        // "@your-scope/mcp-server-clickhouse"
+        "/full/path/to/dist/index.js"
       ],
       "env": {
-         // Option 1: Set env vars here (less secure for secrets)
-         // "CLICKHOUSE_API_KEY_ID": "your_key_id",
-         // "CLICKHOUSE_API_SECRET": "your_key_secret"
-         // Option 2: Ensure the env vars are set in the shell launching Claude Desktop
+        "CLICKHOUSE_API_KEY_ID": "key id",
+        "CLICKHOUSE_API_SECRET": "key secret",
+        "CLICKHOUSE_API_URL": "http://localhost:2023"
       }
     }
   }
 }
+```
