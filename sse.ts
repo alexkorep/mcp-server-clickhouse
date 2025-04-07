@@ -1,17 +1,19 @@
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import express from "express";
-import { createServer } from "./clickhouse.js"; // Ensure correct import name
-import * as dotenv from 'dotenv'; // Import dotenv
+import { createServer } from "./clickhouse.js";
+import * as dotenv from "dotenv";
 
 dotenv.config(); // Load .env file if present
 
-// Check for required environment variables (similar to index.ts)
 if (!process.env.CLICKHOUSE_API_KEY_ID || !process.env.CLICKHOUSE_API_SECRET) {
-    console.error("ERROR: CLICKHOUSE_API_KEY_ID and CLICKHOUSE_API_SECRET environment variables must be set.");
-    if (process.env.NODE_ENV !== 'production') {
-       console.warn("Consider using a .env file for local development (ensure it's in .gitignore).");
-    }
-    // process.exit(1); // Or let connection fail
+  console.error(
+    "ERROR: CLICKHOUSE_API_KEY_ID and CLICKHOUSE_API_SECRET environment variables must be set."
+  );
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(
+      "Consider using a .env file for local development (ensure it's in .gitignore)."
+    );
+  }
 }
 
 const app = express();
@@ -23,9 +25,9 @@ let transport: SSEServerTransport | null = null;
 
 app.get("/sse", async (req, res) => {
   if (transport) {
-     console.warn("SSE connection already established. Ignoring new request.");
-     res.status(409).send("Connection already established.");
-     return;
+    console.warn("SSE connection already established. Ignoring new request.");
+    res.status(409).send("Connection already established.");
+    return;
   }
   console.log("Received SSE connection request");
   transport = new SSEServerTransport("/message", res); // Pass response object
@@ -35,19 +37,16 @@ app.get("/sse", async (req, res) => {
     console.log("ClickHouse MCP Server connected via SSE");
 
     // Handle client disconnect
-    req.on('close', async () => {
-        console.log("SSE client disconnected");
-        if (server.isConnected) {
-             await cleanup();
-             await server.close(); // Close MCP connection if client disconnects
-        }
-        transport = null; // Allow new connections
+    req.on("close", async () => {
+      console.log("SSE client disconnected");
+      await cleanup();
+      await server.close(); // Close MCP connection if client disconnects
+      transport = null; // Allow new connections
     });
-
   } catch (error) {
-     console.error("Error connecting SSE transport:", error);
-     res.status(500).send("Failed to establish SSE connection");
-     transport = null;
+    console.error("Error connecting SSE transport:", error);
+    res.status(500).send("Failed to establish SSE connection");
+    transport = null;
   }
 });
 
@@ -67,17 +66,14 @@ const listener = app.listen(PORT, () => {
   console.log(`Message endpoint: http://localhost:${PORT}/message`);
 });
 
-
 const shutdown = async () => {
-   console.log("Shutting down ClickHouse MCP SSE Server...");
-   listener.close(async () => {
-       console.log("HTTP server closed.");
-       await cleanup();
-       if (server.isConnected) {
-           await server.close();
-       }
-       process.exit(0);
-   });
+  console.log("Shutting down ClickHouse MCP SSE Server...");
+  listener.close(async () => {
+    console.log("HTTP server closed.");
+    await cleanup();
+    await server.close();
+    process.exit(0);
+  });
 };
 
 // Cleanup on exit signals
