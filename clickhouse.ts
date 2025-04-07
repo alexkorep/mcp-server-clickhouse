@@ -3,14 +3,14 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
   Tool,
-  ToolSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import type { JsonSchema7ObjectType } from "zod-to-json-schema"; // Import type
 
 // --- Constants ---
-const CLICKHOUSE_API_BASE_URL = "https://api.clickhouse.cloud";
+//const CLICKHOUSE_API_BASE_URL = "https://api.clickhouse.cloud";
+const CLICKHOUSE_API_BASE_URL = "http://localhost:3000";
 
 // --- Helper Function for API Calls ---
 
