@@ -1,6 +1,6 @@
 # ClickHouse Cloud MCP Server
 
-This MCP server provides tools to interact with the ClickHouse Cloud API (v1). It allows managing organizations, the rest is TODO.
+This MCP server provides tools to interact with the ClickHouse Cloud API (v1). It allows managing organizations and services, the rest is TODO.
 
 ## Features
 
